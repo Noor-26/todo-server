@@ -13,7 +13,13 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 const run = async () => { 
     try{
         await client.connect()
-        console.log('connected')
+        const taskCollection = client.db("Todo-app").collection("tasks");
+
+        app.post('/tasks', async (req,res) =>{
+            const data = req.body
+            const sendTask = await taskCollection.insertOne(data)
+            res.send(sendTask)
+        })
     }
     finally{
 
