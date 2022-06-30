@@ -14,12 +14,31 @@ const run = async () => {
     try{
         await client.connect()
         const taskCollection = client.db("Todo-app").collection("tasks");
+        const completeCollection = client.db("Todo-app").collection("completed");
 
         app.post('/tasks', async (req,res) =>{
             const data = req.body
             const sendTask = await taskCollection.insertOne(data)
             res.send(sendTask)
         })
+        app.get('/tasks', async (req,res) =>{
+            const email = req.query.email
+            const cursor = {email : email}
+            const getTask = await taskCollection.find(cursor).toArray()
+            res.send(getTask)
+        })
+        app.delete('/tasks/:id', async (req,res) =>{
+            const id = req.params.id
+            const cursor = {_id : ObjectId(id)}
+            const deleteTask = await taskCollection.deleteOne(cursor)
+            res.send(deleteTask)
+        })
+        app.post('/tasks_complete', async (req,res) =>{
+            const body = req.body
+            const sendCompleteTask = await completeCollection.insertOne(body)
+            res.send(sendCompleteTask) 
+        })
+        
     }
     finally{
 
