@@ -20,6 +20,7 @@ const run = async () => {
             const data = req.body
             const sendTask = await taskCollection.insertOne(data)
             res.send(sendTask)
+
         })
         app.get('/tasks', async (req,res) =>{
             const email = req.query.email
@@ -33,12 +34,42 @@ const run = async () => {
             const deleteTask = await taskCollection.deleteOne(cursor)
             res.send(deleteTask)
         })
-        app.post('/tasks_complete', async (req,res) =>{
+         
+        app.delete('/tasks_complete/:id', async (req,res) =>{
+            const id = req.params.id
+            const cursor = {_id : (id)} 
+            const deleteData = await completeCollection.deleteOne(cursor)
+            res.send(deleteData)
+        })
+        app.post('/tasks_complete/:id', async (req,res) =>{
             const body = req.body
+            const id = req.params.id
+            const cursor = {_id : ObjectId(id)}
+            const deleteTask = await taskCollection.deleteOne(cursor)
             const sendCompleteTask = await completeCollection.insertOne(body)
             res.send(sendCompleteTask) 
         })
-        
+        app.get('/tasks_complete', async (req,res) =>{
+            const email = req.query.email
+            const cursor = {email:email}
+            const getCompleteTask = await completeCollection.find(cursor).toArray()
+            res.send(getCompleteTask) 
+        })
+
+        app.patch('/tasks/:id', async (req,res) =>{
+            const id = req.params.id
+            const filter = {_id:ObjectId(id)}
+            const body = req.body
+            console.log(body)
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                  taskData : body.taskData
+                },
+              };
+              const result = await taskCollection.updateOne(filter, updateDoc, options);
+              res.send(result)
+        })
     }
     finally{
 
