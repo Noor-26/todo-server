@@ -21,7 +21,7 @@ const run = async () => {
             const sendTask = await taskCollection.insertOne(data)
             res.send(sendTask)
         })
-        
+
         app.post('/tasks_complete/:id', async (req,res) =>{
             const body = req.body
             const id = req.params.id
@@ -49,7 +49,6 @@ const run = async () => {
             const id = req.params.id
             const filter = {_id:ObjectId(id)}
             const body = req.body
-            console.log(body)
             const options = { upsert: true };
             const updateDoc = {
                 $set: {
