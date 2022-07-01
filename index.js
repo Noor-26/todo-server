@@ -20,27 +20,8 @@ const run = async () => {
             const data = req.body
             const sendTask = await taskCollection.insertOne(data)
             res.send(sendTask)
-
         })
-        app.get('/tasks', async (req,res) =>{
-            const email = req.query.email
-            const cursor = {email : email}
-            const getTask = await taskCollection.find(cursor).toArray()
-            res.send(getTask)
-        })
-        app.delete('/tasks/:id', async (req,res) =>{
-            const id = req.params.id
-            const cursor = {_id : ObjectId(id)}
-            const deleteTask = await taskCollection.deleteOne(cursor)
-            res.send(deleteTask)
-        })
-         
-        app.delete('/tasks_complete/:id', async (req,res) =>{
-            const id = req.params.id
-            const cursor = {_id : (id)} 
-            const deleteData = await completeCollection.deleteOne(cursor)
-            res.send(deleteData)
-        })
+        
         app.post('/tasks_complete/:id', async (req,res) =>{
             const body = req.body
             const id = req.params.id
@@ -49,6 +30,14 @@ const run = async () => {
             const sendCompleteTask = await completeCollection.insertOne(body)
             res.send(sendCompleteTask) 
         })
+
+        app.get('/tasks', async (req,res) =>{
+            const email = req.query.email
+            const cursor = {email : email}
+            const getTask = await taskCollection.find(cursor).toArray()
+            res.send(getTask)
+        })
+           
         app.get('/tasks_complete', async (req,res) =>{
             const email = req.query.email
             const cursor = {email:email}
@@ -70,6 +59,22 @@ const run = async () => {
               const result = await taskCollection.updateOne(filter, updateDoc, options);
               res.send(result)
         })
+
+        app.delete('/tasks/:id', async (req,res) =>{
+            const id = req.params.id
+            const cursor = {_id : ObjectId(id)}
+            const deleteTask = await taskCollection.deleteOne(cursor)
+            res.send(deleteTask)
+        })
+         
+        app.delete('/tasks_complete/:id', async (req,res) =>{
+            const id = req.params.id
+            const cursor = {_id : (id)} 
+            const deleteData = await completeCollection.deleteOne(cursor)
+            res.send(deleteData)
+        })
+    
+        
     }
     finally{
 
